@@ -15,9 +15,13 @@ namespace Projeto_Final
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+               .AddNewtonsoftJson(options =>
+               {
+                   options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                   options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+               });
 
             var connectionString = builder.Configuration.
                     GetConnectionString("DefaultConnection");
@@ -27,8 +31,10 @@ namespace Projeto_Final
             );
 
             builder.Services.AddScoped<IProdutoService, ProdutoService>();
+            builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 
             builder.Services.AddTransient<IValidator<Produto>, ProdutoValidator>();
+            builder.Services.AddTransient<IValidator<Categoria>, CategoriaValidator>();
 
             builder.Services.AddCors(options => {
                 options.AddPolicy(name: "MyPolicy",
