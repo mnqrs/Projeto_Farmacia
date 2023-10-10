@@ -1,6 +1,11 @@
 
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Projeto_Final.Data;
+using Projeto_Final.Model;
+using Projeto_Final.Service;
+using Projeto_Final.Service.Implements;
+using Projeto_Final.Validator;
 
 namespace Projeto_Final
 {
@@ -20,6 +25,10 @@ namespace Projeto_Final
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(connectionString)
             );
+
+            builder.Services.AddScoped<IProdutoService, ProdutoService>();
+
+            builder.Services.AddTransient<IValidator<Produto>, ProdutoValidator>();
 
             builder.Services.AddCors(options => {
                 options.AddPolicy(name: "MyPolicy",
